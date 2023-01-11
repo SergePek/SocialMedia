@@ -16,7 +16,9 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     try {
+        console.log("dkjjejjekrkejrkejkrjkerj");
         const post = await Post.findById(req.params.id);
+        console.log(post);
         console.log(post.userId);
         console.log(post.userId === req.body.userId);
         console.log(req.body.userId);
@@ -28,6 +30,7 @@ router.put("/:id", async (req, res) => {
             return res.status(403).json("you can update only yor post");
         }
     } catch (err) {
+        console.log("поймали ошибку");
         return res.status(500).json(err);
     }
 });
@@ -79,9 +82,9 @@ router.get("/:id", async (req, res) => {
 });
 
 // get timeline posts
-router.get("/timeline/all", async (req, res) => {
+router.get("/timeline/:userId", async (req, res) => {
     try {
-        const currentUser = await User.findById(req.body.userId);
+        const currentUser = await User.findById(req.params.userId);
         const userPosts = await Post.find({ userId: currentUser._id });
         const friendPosts = await Promise.all(
             currentUser.followings.map((friendId) => {
@@ -89,6 +92,16 @@ router.get("/timeline/all", async (req, res) => {
             })
         );
         return res.status(200).json(userPosts.concat(...friendPosts));
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+});
+// get user,s all posts
+router.get("/profile/:username", async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username })
+        const posts = await Post.find({ userId: user._id });
+        return res.status(200).json(posts);
     } catch (error) {
         return res.status(500).json(error);
     }
