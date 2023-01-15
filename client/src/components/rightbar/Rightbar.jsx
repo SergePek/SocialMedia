@@ -3,10 +3,10 @@ import { Users } from "../../dummyData";
 import Online from "../online/Online";
 
 
-const Rightbar = ({ profile }) => {
+const Rightbar = ({ user }) => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const HomeRightBar = () => {
-       
+
         return (
             <>
                 <div className="birthdayContainer">
@@ -32,15 +32,21 @@ const Rightbar = ({ profile }) => {
                 <div className="rightbarInfo">
                     <div className="rightbarInfoItem">
                         <span className="rightbarInfoKey">City:</span>
-                        <span className="rightbarInfoValue">New York</span>
+                        <span className="rightbarInfoValue">{user.city}</span>
                     </div>
                     <div className="rightbarInfoItem">
                         <span className="rightbarInfoKey">From:</span>
-                        <span className="rightbarInfoValue">Madrid</span>
+                        <span className="rightbarInfoValue">{user.from}</span>
                     </div>
                     <div className="rightbarInfoItem">
                         <span className="rightbarInfoKey">Relationship:</span>
-                        <span className="rightbarInfoValue">Single</span>
+                        <span className="rightbarInfoValue">{
+                            user.relationship === 1
+                                ? "Single"
+                                : user.relationship === 2
+                                    ? "Maried"
+                                    : ""
+                        }</span>
                     </div>
                 </div>
                 <h4 className="rightbarTitle">User friends</h4>
@@ -49,27 +55,6 @@ const Rightbar = ({ profile }) => {
                         <img src={`${PF}person/1.jpeg`} alt="" className="rightbarFollowingImg" />
                         <span className="rightbarFollowingName">John Carter</span>
                     </div>
-                    <div className="rightbarFollowing">
-                        <img src={`${PF}person/6.jpeg`} alt="" className="rightbarFollowingImg" />
-                        <span className="rightbarFollowingName">John Carter</span>
-                    </div>
-                    <div className="rightbarFollowing">
-                        <img src={`${PF}person/2.jpeg`} alt="" className="rightbarFollowingImg" />
-                        <span className="rightbarFollowingName">John Carter</span>
-                    </div>
-                    <div className="rightbarFollowing">
-                        <img src={`${PF}person/3.jpeg`} alt="" className="rightbarFollowingImg" />
-                        <span className="rightbarFollowingName">John Carter</span>
-                    </div>
-                    <div className="rightbarFollowing">
-                        <img src={`${PF}person/4.jpeg`} alt="" className="rightbarFollowingImg" />
-                        <span className="rightbarFollowingName">John Carter</span>
-                    </div>
-                    <div className="rightbarFollowing">
-                        <img src={`${PF}person/5.jpeg`} alt="" className="rightbarFollowingImg" />
-                        <span className="rightbarFollowingName">John Carter</span>
-                    </div>
-
                 </div>
             </>
         )
@@ -77,7 +62,7 @@ const Rightbar = ({ profile }) => {
     return (
         <div className="rightbar">
             <div className="rightbarWrapper">
-                {profile ? <ProfileRightBar /> : <HomeRightBar />}
+                {user ? <ProfileRightBar /> : <HomeRightBar />}
             </div>
         </div>
     );

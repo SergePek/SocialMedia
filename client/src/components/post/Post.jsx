@@ -1,28 +1,41 @@
 import "./post.css"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+
 
 const Post = ({ post }) => {
-    console.log("post" + post)
+    // console.log("post" + post)
 
     const [like, setLike] = useState(post.likes.length);
     const [isLiked, setIsLiked] = useState(false);
     const [user, setUser] = useState({});
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const { user: currentUser } = useContext(AuthContext);
+
+    useEffect(() => {
+        setIsLiked(post.likes.includes(currentUser._id));
+    }, [currentUser._id, post.likes]);
 
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get(`http://localhost:5000/api/users?userId=${post.userId}`);
-            console.log(res.data);
+            //console.log(res.data);
             setUser(res.data);
         }
         fetchUser()
     }, [post.userId]);
 
     const likeHandler = (e) => {
+        try {
+            axios.put(
+                "http://localhost:5000/api/posts/" + post._id + "/like", { userId: currentUser._id });
+        } catch (err) {
+
+        }
         setLike(isLiked ? like - 1 : like + 1);
         setIsLiked(!isLiked);
     }
@@ -33,7 +46,7 @@ const Post = ({ post }) => {
                     <div className="postTopLeft">
                         <Link to={`profile/${user.username}`}>
                             <img className="postProfileImg"
-                                src={user.profilePicture || PF + "person/noAvatar.png"}
+                                src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"}
                                 alt=""
                             />
                         </Link>
@@ -49,6 +62,7 @@ const Post = ({ post }) => {
                 <div className="postCenter">
                     <span className="postText">{post?.desc}</span>
                     <img className="postImg" src={PF + post.img} alt="" />
+
                 </div>
                 <div className="postBottom">
                     <div className="postBottomLeft">
