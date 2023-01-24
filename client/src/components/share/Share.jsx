@@ -2,6 +2,7 @@ import "./share.css"
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import RoomIcon from '@mui/icons-material/Room';
 import LabelIcon from '@mui/icons-material/Label';
+import CancelIcon from '@mui/icons-material/Cancel';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { useContext, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -61,6 +62,14 @@ const Share = () => {
                     />
                 </div>
                 <hr className="shareHr" />
+                {file && (
+                    <div className="shareImgContainer">
+                        <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
+                        <CancelIcon className="shareCancelImg"
+                            onClick ={() => setFile(null)}
+                        />
+                    </div>
+                )}
                 <form className="shareBottom" onSubmit={submitHandler}>
                     <div className="shareOptions">
                         <label htmlFor="file" className="shareOption">
